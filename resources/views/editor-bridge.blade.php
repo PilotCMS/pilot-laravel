@@ -1,4 +1,21 @@
 @if(config('pilot.editor_bridge.enabled', true))
+    <style>
+        [data-pilot-editable="block"][data-pilot-selected="true"] {
+            position: relative;
+            border-color: #00b3b0 !important;
+            box-shadow: 0 0 0 2px rgba(0, 179, 176, 0.18);
+        }
+
+        [data-pilot-editable="block"][data-pilot-selected="true"]::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border: 2px solid #00b3b0;
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 50;
+        }
+    </style>
     <script>
         (() => {
             const liveRootSelector = '{{ config('pilot.editor_bridge.live_root', '[data-pilot-live-root]') }}';
@@ -74,6 +91,34 @@
 
             document.addEventListener('click', disablePreviewLinkNavigation, true);
 
+            const syncSelectedBlock = (blockId) => {
+                document.querySelectorAll('[data-pilot-selected="true"]').forEach((element) => {
+                    element.removeAttribute('data-pilot-selected');
+                });
+
+                if (! blockId) {
+                    return;
+                }
+
+                document.querySelectorAll('[data-pilot-editable="block"]').forEach((element) => {
+                    if (element.dataset.pilotBlockId === String(blockId)) {
+                        element.setAttribute('data-pilot-selected', 'true');
+                    }
+                });
+            };
+
+            window.addEventListener('message', (event) => {
+                if (parentOrigin !== '*' && event.origin !== parentOrigin) {
+                    return;
+                }
+
+                if (event.data?.type !== 'pilot-preview-sync-selected-block') {
+                    return;
+                }
+
+                syncSelectedBlock(event.data.blockId);
+            });
+
             document.addEventListener('click', (event) => {
                 const editable = event.target.closest('[data-pilot-editable="block"]');
 
@@ -83,6 +128,8 @@
 
                 event.preventDefault();
                 event.stopPropagation();
+
+                syncSelectedBlock(editable.dataset.pilotBlockId);
 
                 window.parent.postMessage({
                     type: 'pilot-preview-select-block',
