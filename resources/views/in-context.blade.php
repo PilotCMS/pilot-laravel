@@ -14,7 +14,15 @@
             const HIGHLIGHT_ID = 'pilot-in-context-highlight';
             const BLOCK_SELECTOR = '[data-pilot-editable="block"]';
             const FIELD_SELECTOR = '[data-pilot-editable="field"]';
-            const PANEL_ENABLED = @json(! request()->has('pilot_in_context_panel') || request()->boolean('pilot_in_context_panel'));
+            const PANEL_ENABLED = (() => {
+                const value = new URLSearchParams(window.location.search).get('pilot_in_context_panel');
+
+                if (value === null) {
+                    return true;
+                }
+
+                return ! ['0', 'false', 'off', 'no'].includes(value.toLowerCase());
+            })();
 
             const parentOrigin = (() => {
                 try {

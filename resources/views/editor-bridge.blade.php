@@ -186,7 +186,7 @@
                 document.querySelectorAll('[data-pilot-editable="block"]').forEach(ensurePreviewToolbar);
             };
 
-            const syncSelectedBlock = (blockId, shouldScroll = false) => {
+            const syncSelectedBlock = (blockId) => {
                 document.querySelectorAll('[data-pilot-selected="true"]').forEach((element) => {
                     element.removeAttribute('data-pilot-selected');
                 });
@@ -198,10 +198,6 @@
                 document.querySelectorAll('[data-pilot-editable="block"]').forEach((element) => {
                     if (element.dataset.pilotBlockId === String(blockId)) {
                         element.setAttribute('data-pilot-selected', 'true');
-
-                        if (shouldScroll) {
-                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
                     }
                 });
             };
@@ -217,7 +213,7 @@
                     return;
                 }
 
-                syncSelectedBlock(event.data.blockId, true);
+                syncSelectedBlock(event.data.blockId);
             });
 
             document.addEventListener('click', (event) => {
