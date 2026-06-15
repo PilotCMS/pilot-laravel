@@ -14,7 +14,7 @@
             const HIGHLIGHT_ID = 'pilot-in-context-highlight';
             const BLOCK_SELECTOR = '[data-pilot-editable="block"]';
             const FIELD_SELECTOR = '[data-pilot-editable="field"]';
-            const PANEL_ENABLED = (() => {
+            let panelEnabled = (() => {
                 const value = new URLSearchParams(window.location.search).get('pilot_in_context_panel');
 
                 if (value === null) {
@@ -376,6 +376,23 @@
                 selectedBlockUpdatedAt: null,
                 saving: false,
                 syncTimer: null,
+            };
+
+            const disablePanel = () => {
+                panelEnabled = false;
+
+                if (state.syncTimer) {
+                    window.clearInterval(state.syncTimer);
+                    state.syncTimer = null;
+                }
+
+                state.host?.remove();
+                state.host = null;
+                state.root = null;
+                state.panel = null;
+                state.body = null;
+                state.status = null;
+                state.activeButton = null;
             };
 
             const editableValue = (element) => {
@@ -762,7 +779,7 @@
                     componentPath: element.dataset.pilotComponentPath,
                 });
 
-                if (! PANEL_ENABLED) {
+                if (! panelEnabled) {
                     return;
                 }
 
@@ -994,7 +1011,7 @@
                 const field = event.target.closest?.(FIELD_SELECTOR);
 
                 if (field) {
-                    if (! PANEL_ENABLED) {
+                    if (! panelEnabled) {
                         const block = blockFrom(field);
 
                         if (block) {
@@ -1077,9 +1094,18 @@
 
             window.addEventListener('resize', () => updateHighlight(state.selectedElement));
             window.addEventListener('scroll', () => updateHighlight(state.selectedElement), true);
+            window.addEventListener('message', (event) => {
+                if (parentOrigin !== '*' && event.origin !== parentOrigin) {
+                    return;
+                }
+
+                if (event.data?.type === 'pilot-preview-editor-mode' && event.data?.inContextPanel === false) {
+                    disablePanel();
+                }
+            });
 
             installPageStyles();
-            if (PANEL_ENABLED) {
+            if (panelEnabled) {
                 buildPanel();
                 state.syncTimer = window.setInterval(syncFromServer, 1000);
             }
