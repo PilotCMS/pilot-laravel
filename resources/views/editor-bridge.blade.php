@@ -187,6 +187,7 @@
             };
 
             const syncSelectedBlock = (blockId) => {
+                preparePreviewToolbars();
                 document.querySelectorAll('[data-pilot-selected="true"]').forEach((element) => {
                     element.removeAttribute('data-pilot-selected');
                 });
@@ -203,6 +204,8 @@
             };
 
             preparePreviewToolbars();
+
+            syncSelectedBlock(new URLSearchParams(window.location.search).get('pilot_selected_block'));
 
             window.addEventListener('message', (event) => {
                 if (parentOrigin !== '*' && event.origin !== parentOrigin) {
