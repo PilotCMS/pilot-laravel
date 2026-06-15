@@ -14,7 +14,12 @@
             const HIGHLIGHT_ID = 'pilot-in-context-highlight';
             const BLOCK_SELECTOR = '[data-pilot-editable="block"]';
             const FIELD_SELECTOR = '[data-pilot-editable="field"]';
+            const CMS_PREVIEW_FRAME_NAME = 'pilot-cms-preview';
             let panelEnabled = (() => {
+                if (window.name === CMS_PREVIEW_FRAME_NAME) {
+                    return false;
+                }
+
                 const value = new URLSearchParams(window.location.search).get('pilot_in_context_panel');
 
                 if (value === null) {
