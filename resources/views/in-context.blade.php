@@ -14,6 +14,7 @@
             const HIGHLIGHT_ID = 'pilot-in-context-highlight';
             const BLOCK_SELECTOR = '[data-pilot-editable="block"]';
             const FIELD_SELECTOR = '[data-pilot-editable="field"]';
+            const PANEL_ENABLED = @json(! request()->has('pilot_in_context_panel') || request()->boolean('pilot_in_context_panel'));
 
             const parentOrigin = (() => {
                 try {
@@ -753,6 +754,10 @@
                     componentPath: element.dataset.pilotComponentPath,
                 });
 
+                if (! PANEL_ENABLED) {
+                    return;
+                }
+
                 try {
                     const block = await fetchBlock(blockId);
                     state.selectedBlock = block;
@@ -974,9 +979,25 @@
                     return;
                 }
 
+                if (event.target.closest?.('.pilot-preview-toolbar [data-pilot-action]')) {
+                    return;
+                }
+
                 const field = event.target.closest?.(FIELD_SELECTOR);
 
                 if (field) {
+                    if (! PANEL_ENABLED) {
+                        const block = blockFrom(field);
+
+                        if (block) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            selectBlock(block);
+                        }
+
+                        return;
+                    }
+
                     event.preventDefault();
                     event.stopPropagation();
 
@@ -1050,8 +1071,10 @@
             window.addEventListener('scroll', () => updateHighlight(state.selectedElement), true);
 
             installPageStyles();
-            buildPanel();
-            state.syncTimer = window.setInterval(syncFromServer, 1000);
+            if (PANEL_ENABLED) {
+                buildPanel();
+                state.syncTimer = window.setInterval(syncFromServer, 1000);
+            }
         })();
     </script>
 @endif
