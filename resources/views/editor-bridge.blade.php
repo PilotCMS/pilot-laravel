@@ -216,6 +216,12 @@
                 syncSelectedBlock(event.data.blockId);
             });
 
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'pilot-preview-ready',
+                }, parentOrigin);
+            }
+
             document.addEventListener('click', (event) => {
                 const toolbarButton = event.target.closest('[data-pilot-action]');
                 const editable = event.target.closest('[data-pilot-editable="block"]');
