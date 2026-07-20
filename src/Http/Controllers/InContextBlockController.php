@@ -89,7 +89,7 @@ class InContextBlockController extends Controller
             return;
         }
 
-        $contentId = $request->integer('pilot_content');
+        $contentId = (int) $request->input('pilot_content');
         $blockContentId = (int) Block::query()->whereKey($block->getKey())->value('content_id');
 
         abort_unless(
@@ -108,7 +108,7 @@ class InContextBlockController extends Controller
         }
 
         abort_unless(
-            $request->integer('pilot_content') === $contentId
+            (int) $request->input('pilot_content') === $contentId
                 && $this->previewSignatureIsValid($contentId, $request),
             403,
             'Invalid or expired Pilot preview link.'
@@ -117,7 +117,7 @@ class InContextBlockController extends Controller
 
     protected function previewSignatureIsValid(int $contentId, Request $request): bool
     {
-        $expiresAt = $request->integer('pilot_expires');
+        $expiresAt = (int) $request->input('pilot_expires');
         $signature = $request->query('pilot_signature');
 
         if (! is_string($signature) || $signature === '' || $expiresAt < now()->timestamp) {
@@ -215,7 +215,7 @@ class InContextBlockController extends Controller
 
     protected function locale(Request $request): string
     {
-        return $request->string('locale', config('pilot.default_locale', app()->getLocale()))->toString();
+        return (string) $request->input('locale', config('pilot.default_locale', app()->getLocale()));
     }
 
     /**

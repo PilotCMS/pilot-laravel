@@ -8,11 +8,8 @@ class BlockType extends Model
 {
     protected $guarded = [];
 
-    protected function casts(): array
-    {
-        return [
-            'schema' => 'array',
-            'is_global' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'schema' => 'array',
+        'is_global' => 'boolean',
+    ];
 }

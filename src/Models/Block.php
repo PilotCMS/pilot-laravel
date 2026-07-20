@@ -10,13 +10,10 @@ class Block extends Model
 {
     protected $guarded = [];
 
-    protected function casts(): array
-    {
-        return [
-            'position' => 'integer',
-            'data' => 'array',
-        ];
-    }
+    protected $casts = [
+        'position' => 'integer',
+        'data' => 'array',
+    ];
 
     public function content(): BelongsTo
     {

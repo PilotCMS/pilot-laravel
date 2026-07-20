@@ -28,11 +28,11 @@ class PreviewUrl
 
     public function requestIsValid(?int $contentId = null): bool
     {
-        $contentId ??= Request::integer('pilot_content');
+        $contentId ??= (int) Request::input('pilot_content');
 
         return $this->tokens->valid(
             $contentId,
-            Request::integer('pilot_expires'),
+            (int) Request::input('pilot_expires'),
             Request::query('pilot_signature'),
         );
     }

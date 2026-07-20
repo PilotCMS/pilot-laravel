@@ -9,15 +9,12 @@ class Redirect extends Model
 {
     protected $guarded = [];
 
-    protected function casts(): array
-    {
-        return [
-            'is_active' => 'boolean',
-            'last_hit_at' => 'datetime',
-            'hit_count' => 'integer',
-            'status_code' => 'integer',
-        ];
-    }
+    protected $casts = [
+        'is_active' => 'boolean',
+        'last_hit_at' => 'datetime',
+        'hit_count' => 'integer',
+        'status_code' => 'integer',
+    ];
 
     public function space(): BelongsTo
     {

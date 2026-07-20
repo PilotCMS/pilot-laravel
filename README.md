@@ -6,8 +6,8 @@ This package is intended for Laravel applications that consume Pilot-managed con
 
 ## Requirements
 
-- PHP 8.2 or higher
-- Laravel 11 or 12
+- PHP 8.0.2 or higher
+- Laravel 9.2, 10, 11, or 12
 
 ## Installation
 

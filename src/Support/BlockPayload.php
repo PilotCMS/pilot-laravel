@@ -13,18 +13,25 @@ use Illuminate\Support\Str;
 class BlockPayload
 {
     /**
+     * @var Collection<int, BlockPayload>
+     */
+    public Collection $children;
+
+    /**
      * @param  Collection<int, BlockPayload>  $children
      * @param  array<string, mixed>  $data
      * @param  array<int, string>  $componentPath
      */
     public function __construct(
-        public readonly string|int|null $id,
-        public readonly string $component,
-        public readonly array $data = [],
-        public readonly Collection $children = new Collection,
-        public readonly ?int $contentId = null,
-        public readonly array $componentPath = [],
-    ) {}
+        public string|int|null $id,
+        public string $component,
+        public array $data = [],
+        ?Collection $children = null,
+        public ?int $contentId = null,
+        public array $componentPath = [],
+    ) {
+        $this->children = $children ?? new Collection;
+    }
 
     public static function fromModel(Model $block, string $locale, array $componentPath = []): self
     {

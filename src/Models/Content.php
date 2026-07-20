@@ -10,15 +10,12 @@ class Content extends Model
 {
     protected $guarded = [];
 
-    protected function casts(): array
-    {
-        return [
-            'published_at' => 'datetime',
-            'scheduled_for' => 'datetime',
-            'review_requested_at' => 'datetime',
-            'meta' => 'array',
-        ];
-    }
+    protected $casts = [
+        'published_at' => 'datetime',
+        'scheduled_for' => 'datetime',
+        'review_requested_at' => 'datetime',
+        'meta' => 'array',
+    ];
 
     public function space(): BelongsTo
     {

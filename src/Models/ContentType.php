@@ -9,15 +9,12 @@ class ContentType extends Model
 {
     protected $guarded = [];
 
-    protected function casts(): array
-    {
-        return [
-            'schema' => 'array',
-            'allowed_blocks' => 'array',
-            'settings' => 'array',
-            'is_active' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'schema' => 'array',
+        'allowed_blocks' => 'array',
+        'settings' => 'array',
+        'is_active' => 'boolean',
+    ];
 
     public function contents(): HasMany
     {

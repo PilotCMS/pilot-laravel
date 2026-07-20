@@ -14,15 +14,15 @@ class ContentPayload
      * @param  array<string, mixed>  $meta
      */
     public function __construct(
-        public readonly string|int|null $id,
-        public readonly string $slug,
-        public readonly string $name,
-        public readonly ?string $contentType,
-        public readonly string $status,
-        public readonly ?string $publishedAt,
-        public readonly array $meta,
-        public readonly Collection $blocks,
-        public readonly string $source = 'mysql',
+        public string|int|null $id,
+        public string $slug,
+        public string $name,
+        public ?string $contentType,
+        public string $status,
+        public ?string $publishedAt,
+        public array $meta,
+        public Collection $blocks,
+        public string $source = 'mysql',
     ) {}
 
     public static function fromModel(Model $content, string $locale): self

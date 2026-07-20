@@ -10,13 +10,10 @@ class SpacePreviewTarget extends Model
 {
     protected $guarded = [];
 
-    protected function casts(): array
-    {
-        return [
-            'sort_order' => 'integer',
-            'is_default' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'sort_order' => 'integer',
+        'is_default' => 'boolean',
+    ];
 
     public function space(): BelongsTo
     {
