@@ -203,20 +203,42 @@
                 });
             };
 
+            const scrollBlockIntoView = (blockId) => {
+                if (! blockId) {
+                    return false;
+                }
+
+                const block = Array.from(document.querySelectorAll('[data-pilot-editable="block"]'))
+                    .find((element) => element.dataset.pilotBlockId === String(blockId));
+
+                if (! block) {
+                    return false;
+                }
+
+                block.scrollIntoView({ block: 'center', inline: 'nearest' });
+
+                return true;
+            };
+
             preparePreviewToolbars();
 
-            syncSelectedBlock(new URLSearchParams(window.location.search).get('pilot_selected_block'));
+            const initialSelectedBlockId = new URLSearchParams(window.location.search).get('pilot_selected_block');
+
+            syncSelectedBlock(initialSelectedBlockId);
+            scrollBlockIntoView(initialSelectedBlockId);
 
             window.addEventListener('message', (event) => {
                 if (parentOrigin !== '*' && event.origin !== parentOrigin) {
                     return;
                 }
 
-                if (event.data?.type !== 'pilot-preview-sync-selected-block') {
-                    return;
+                if (event.data?.type === 'pilot-preview-sync-selected-block') {
+                    syncSelectedBlock(event.data.blockId);
                 }
 
-                syncSelectedBlock(event.data.blockId);
+                if (event.data?.type === 'pilot-preview-scroll-to-block') {
+                    scrollBlockIntoView(event.data.blockId);
+                }
             });
 
             if (window.parent !== window) {
