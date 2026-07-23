@@ -10,6 +10,8 @@ class ContentQuery
 {
     protected Builder $query;
 
+    protected string|int|Space|null $space = null;
+
     public function __construct()
     {
         $this->query = Content::query()->where('type', 'page');
@@ -17,21 +19,31 @@ class ContentQuery
 
     public function space(string|int|Space $space): self
     {
-        if ($space instanceof Space) {
-            $this->query->where('space_id', $space->id);
+        return $this->inSpace($space);
+    }
 
-            return $this;
+    public function inSpace(string|int|Space $space): self
+    {
+        $this->space = $space;
+
+        return $this;
+    }
+
+    protected function applySpace(Builder $query, string|int|Space $space): void
+    {
+        if ($space instanceof Space) {
+            $query->where('space_id', $space->id);
+
+            return;
         }
 
         if (is_int($space)) {
-            $this->query->where('space_id', $space);
+            $query->where('space_id', $space);
 
-            return $this;
+            return;
         }
 
-        $this->query->whereHas('space', fn (Builder $query) => $query->where('slug', $space));
-
-        return $this;
+        $query->whereHas('space', fn (Builder $query) => $query->where('slug', $space));
     }
 
     public function slug(string $slug): self
@@ -84,16 +96,23 @@ class ContentQuery
 
     public function builder(): Builder
     {
-        return $this->query;
+        $query = clone $this->query;
+        $space = $this->space ?? config('pilot.default_space');
+
+        if ($space !== null && $space !== '') {
+            $this->applySpace($query, $space);
+        }
+
+        return $query;
     }
 
     public function first(): ?Content
     {
-        return $this->query->first();
+        return $this->builder()->first();
     }
 
     public function firstOrFail(): Content
     {
-        return $this->query->firstOrFail();
+        return $this->builder()->firstOrFail();
     }
 }

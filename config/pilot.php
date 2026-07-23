@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'default_space' => env('PILOT_DEFAULT_SPACE'),
+    'default_space' => env('PILOT_DEFAULT_SPACE', 'website'),
     'home_slug' => env('PILOT_HOME_SLUG', 'home'),
     'default_locale' => env('PILOT_DEFAULT_LOCALE', env('APP_LOCALE', 'en')),
     'cms_url' => env('PILOT_CMS_URL'),
