@@ -107,6 +107,12 @@ return view('content', compact('content'));
 
 You remain in control of route patterns, middleware, caching, error handling, and which application view renders the content.
 
+Render the payload's blocks from your application view with the package component:
+
+```blade
+<x-pilot::blocks :content="$content" />
+```
+
 ### 5. Enable previews when needed
 
 Preview and in-context editing are optional. In Pilot, add the frontend application's base URL as a preview target for the space, then copy the displayed secret into the frontend application:
@@ -238,6 +244,12 @@ return Pilot::renderer()->pageView($payload);
 By default, the package looks for app-level views named `page` and `blocks`. If they do not exist, it falls back to the package views.
 
 ## Views
+
+Render all blocks from a `ContentPayload` with the namespaced package component:
+
+```blade
+<x-pilot::blocks :content="$content" />
+```
 
 The default block renderer maps a Pilot component key to an application Blade component. For example, a `feature-grid` block resolves to:
 

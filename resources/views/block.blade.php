@@ -1,4 +1,5 @@
 @php
+    $block = $block instanceof \Pilot\Laravel\Support\BlockPayload ? $block->toArray() : $block;
     $component = $block['component'] ?? $block['type'] ?? 'unknown';
     $componentName = (string) str($component)->replace(['.', '/', '\\'], '-')->kebab();
     $componentView = 'components.' . $componentName;
