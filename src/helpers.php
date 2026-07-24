@@ -1,6 +1,16 @@
 <?php
 
+use Illuminate\Support\HtmlString;
 use Pilot\Laravel\Support\AssetUrl;
+use Pilot\Laravel\Support\ContentPayload;
+use Pilot\Laravel\Support\ContentRenderer;
+
+if (! function_exists('pilotBlocks')) {
+    function pilotBlocks(ContentPayload $content, ?string $view = null): HtmlString
+    {
+        return app(ContentRenderer::class)->renderBlocks($content, $view);
+    }
+}
 
 if (! function_exists('pilotAsset')) {
     function pilotAsset(mixed $path): string

@@ -113,6 +113,12 @@ Render the payload's blocks from your application view with the package componen
 <x-pilot::blocks :content="$content" />
 ```
 
+The equivalent helper syntax is also available:
+
+```blade
+{{ pilotBlocks($content) }}
+```
+
 ### 5. Enable previews when needed
 
 Preview and in-context editing are optional. In Pilot, add the frontend application's base URL as a preview target for the space, then copy the displayed secret into the frontend application:
@@ -250,6 +256,14 @@ Render all blocks from a `ContentPayload` with the namespaced package component:
 ```blade
 <x-pilot::blocks :content="$content" />
 ```
+
+Or use the rendering helper when component syntax is not convenient:
+
+```blade
+{{ pilotBlocks($content) }}
+```
+
+Both options return the same rendered block markup. `pilotBlocks()` returns an `HtmlString`, so Blade's regular escaped echo syntax is safe and no `{!! !!}` output is necessary.
 
 The default block renderer maps a Pilot component key to an application Blade component. For example, a `feature-grid` block resolves to:
 
