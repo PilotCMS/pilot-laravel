@@ -843,12 +843,17 @@
                 #${HIGHLIGHT_ID} {
                     border: 2px solid #14b8a6;
                     border-radius: 8px;
+                    box-sizing: border-box;
                     box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.08), 0 12px 32px rgba(15, 23, 42, 0.18);
+                    display: block;
+                    left: 0;
                     opacity: 0;
                     pointer-events: none;
                     position: fixed;
-                    transition: opacity 120ms ease, transform 120ms ease, width 120ms ease, height 120ms ease;
-                    z-index: 2147483646;
+                    top: 0;
+                    transition: opacity 120ms ease, left 120ms ease, top 120ms ease, width 120ms ease, height 120ms ease;
+                    will-change: left, top, width, height, opacity;
+                    z-index: 2147483647;
                 }
             `;
 
@@ -940,8 +945,9 @@
 
                 const rect = element.getBoundingClientRect();
                 highlight.style.height = `${rect.height}px`;
+                highlight.style.left = `${rect.left}px`;
                 highlight.style.opacity = '1';
-                highlight.style.transform = `translate(${rect.left}px, ${rect.top}px)`;
+                highlight.style.top = `${rect.top}px`;
                 highlight.style.width = `${rect.width}px`;
             };
 
