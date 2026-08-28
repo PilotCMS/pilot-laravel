@@ -6,6 +6,10 @@
 <div class="hero-section bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20 px-8 md:px-12 rounded-xl">
     @php
         $backgroundImage = pilotAssetFormatted($data['background_image'] ?? null, $data, 'background_image');
+        $backgroundUrl = pilotImage($data['background_image'] ?? null, 1600, 900);
+        $backgroundStyle = $backgroundUrl !== ''
+            ? "background-image: url('{$backgroundUrl}'); {$backgroundImage['background_position_style']}"
+            : '';
         $title = $data['title'] ?? 'Hero Title';
         $title = is_array($title) ? ($title['en'] ?? reset($title) ?: 'Hero Title') : $title;
         $subtitle = $data['subtitle'] ?? 'Hero subtitle';
@@ -14,7 +18,7 @@
         $inContext = app(\Pilot\Laravel\Support\InContext::class);
     @endphp
     @if($backgroundImage['url'])
-        <div class="absolute inset-0 bg-cover opacity-20 rounded-lg" style="{{ $backgroundImage['background_image_style'] }}"></div>
+        <div class="absolute inset-0 bg-cover opacity-20 rounded-lg" style="{{ $backgroundStyle }}"></div>
     @endif
     <div class="relative space-y-4">
         <h2 class="text-4xl md:text-5xl font-bold" {!! $inContext->field($pilotBlock, 'title') !!}>{{ $title }}</h2>

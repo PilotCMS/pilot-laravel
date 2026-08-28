@@ -11,6 +11,10 @@
         "illuminate/support": "^9.2|^10.0|^11.0|^12.0|^13.0",
         "illuminate/view": "^9.2|^10.0|^11.0|^12.0|^13.0"
     },
+    "require-dev": {
+        "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^9.6|^10.0|^11.5|^12.0"
+    },
     "autoload": {
         "files": [
             "src/helpers.php"
@@ -18,6 +22,14 @@
         "psr-4": {
             "Pilot\\Laravel\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pilot\\Laravel\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
     },
     "extra": {
         "laravel": {

@@ -26,6 +26,30 @@ if (! function_exists('pilotAssets')) {
     }
 }
 
+if (! function_exists('pilotImage')) {
+    /** @param array{fit?: string, format?: string, quality?: int} $options */
+    function pilotImage(mixed $path, int $width, int $height, array $options = []): string
+    {
+        return app(AssetUrl::class)->image($path, $width, $height, $options);
+    }
+}
+
+if (! function_exists('pilotImageSrcset')) {
+    /**
+     * @param  array<int, int>  $widths
+     * @param  array{fit?: string, format?: string, quality?: int}  $options
+     */
+    function pilotImageSrcset(
+        mixed $path,
+        int $width,
+        int $height,
+        array $widths = [480, 768, 1024, 1280],
+        array $options = [],
+    ): string {
+        return app(AssetUrl::class)->srcset($path, $width, $height, $widths, $options);
+    }
+}
+
 if (! function_exists('pilotAssetFormatted')) {
     /**
      * @param  array<string, mixed>  $data

@@ -321,6 +321,72 @@ echo $image['background_image_style'];
 
 The asset base URL comes from `PILOT_ASSET_URL`, falling back to `PILOT_CMS_URL`.
 
+### Responsive image transformations
+
+Raster images selected in current Pilot releases use transformable delivery paths such as `/assets/42/hero.jpg`. Generate a focal-point-aware, web-optimized crop by passing the stored image value to `pilotImage`:
+
+```php
+$src = pilotImage($blockData['image'], 800, 450);
+
+$src = pilotImage($blockData['image'], 800, 450, [
+    'fit' => 'cover',       // cover or contain
+    'format' => 'auto',     // auto, avif, webp, jpeg, or png
+    'quality' => 82,        // 40–95
+]);
+```
+
+This produces a URL like:
+
+```text
+https://cms.example.com/assets/42/hero.jpg?size=800x450&fit=cover&format=auto&quality=82
+```
+
+Pilot Core performs the resize on first request, crops around the focal point stored with the asset, and caches the generated variant. If no focal point was selected, the crop uses the center of the source image.
+
+Use `pilotImageSrcset` to provide responsive candidates with a consistent aspect ratio:
+
+```php
+$srcset = pilotImageSrcset(
+    $blockData['image'],
+    width: 1280,
+    height: 720,
+    widths: [480, 768, 1024, 1280],
+);
+```
+
+```blade
+<img
+    src="{{ pilotImage($data['image'], 1280, 720) }}"
+    srcset="{{ pilotImageSrcset($data['image'], 1280, 720) }}"
+    sizes="(min-width: 1280px) 1280px, 100vw"
+    width="1280"
+    height="720"
+    alt="{{ $data['alt'] ?? '' }}"
+>
+```
+
+The packaged image component uses these helpers automatically, requesting 480, 768, 1024, and 1280-pixel variants. Its dimensions, candidates, and `sizes` rule can be overridden when invoking the component:
+
+```blade
+<x-pilot::image
+    :data="$blockData"
+    :width="1600"
+    :height="900"
+    :widths="[640, 960, 1280, 1600]"
+    sizes="100vw"
+/>
+```
+
+Transformation helpers deliberately leave legacy `/storage/...` paths and third-party URLs unchanged. Those images continue to render, but they cannot use Pilot's transformation API because their stored values do not contain an asset ID. Re-select a legacy image in Pilot to store its transformable delivery URL.
+
+When the Laravel frontend and Pilot CMS run on different origins, configure the CMS origin so relative delivery paths resolve correctly:
+
+```dotenv
+PILOT_CMS_URL=https://cms.example.com
+# Or override only asset delivery:
+PILOT_ASSET_URL=https://media.example.com
+```
+
 ## Preview URLs
 
 Generate a signed preview URL for a content model:
